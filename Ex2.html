@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>:3</h1>
+    <form id="form">
+        <label for="name">Nhập tên Pokemon: </label>
+        <input type="text" id="name" maxlength="50">
+        <button type="submit">Enter</button>
+    </form>
+</body>
+<script>
+const form = document.getElementById("form");
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const input = document.getElementById("name").value.toLowerCase();
+
+        const previousResult = document.getElementById("pokemon-info");
+        if (previousResult) {
+            previousResult.remove();
+        }
+
+        fetch(`https://pokeapi.co/api/v2/pokemon/${input}`)
+            .then((response) => response.json())
+            .then((data) => {
+
+                const h1 = document.createElement("h1");
+                const img = document.createElement("img");
+                const type = document.createElement("p");
+                const height = document.createElement("p");
+                const weight = document.createElement("p");
+
+                h1.innerText = data.name;
+                img.setAttribute("src", data.sprites.other["official-artwork"].front_default);
+                img.style.width = "100px";
+                img.style.height = "100px";
+                type.innerText = `Type: ${data.types.map(typeInfo => typeInfo.type.name).join(', ')}`;
+                height.innerText = `Height: ${data.height / 10} m`;
+                weight.innerText = `Weight: ${data.weight / 10} kg`;
+
+                document.body.appendChild(h1);
+                document.body.appendChild(img);
+                document.body.appendChild(type);
+                document.body.appendChild(height);
+                document.body.appendChild(weight);
+
+                fetch(data.species.url)
+                    .then((response) => response.json())
+                    .then((speciesData) => {
+                        const bio = document.createElement("p");
+                        const bioText = speciesData.flavor_text_entries.find(entry => entry.language.name === 'en');
+                        bio.innerText = `Bio: ${bioText ? bioText.flavor_text : "No bio available."}`;
+                        document.body.appendChild(bio);
+                    });
+            })
+            .catch(() => {
+                alert("Không tìm thấy Pokemon. Vui lòng nhập lại.");
+            });
+    });
+</script>
+
+
+</html>

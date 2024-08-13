@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex.1</title>
+</head>
+<body>
+    <h1>Menu:</h1>
+    <label for="action"> Nhập: </label>
+    <input type="text" id="action" maxlength="1">
+    <button onclick="handleA()">Enter</button>
+</body>
+<script>
+    let menu = ["Rau xào", "Thịt luộc", "Gà rán"];
+    if (!localStorage.getItem('menu')) {
+        localStorage.setItem('menu', JSON.stringify(menu));
+    }
+    
+    function handleA() {
+        const action = document.getElementById('action').value.toUpperCase();
+        
+        if (action === 'C') {
+            const newDish = prompt("Nhập món muốn thêm vào menu:");
+            if (newDish) {
+                menu = JSON.parse(localStorage.getItem('menu'));
+                menu.push(newDish);
+                localStorage.setItem('menu', JSON.stringify(menu));
+                alert(`Thành công! Menu hiện tại: ${menu.join(', ')}.`);
+            } else {
+                alert("Không có món ăn được nhập vào.");
+            }
+        } else if (action === 'R') {
+            menu = JSON.parse(localStorage.getItem('menu'));
+            alert(`Menu hiện tại: ${menu.join(', ')}.`);
+        } else {
+            alert("Vui lòng nhập ký tự hợp lệ: C / R");
+        }
+
+        document.getElementById('action').value = '';
+    }
+</script>
+</html>
